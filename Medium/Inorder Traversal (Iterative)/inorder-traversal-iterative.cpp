@@ -100,20 +100,40 @@ public:
     {
         //code here
         vector<int> ans;
-        stack<Node*> st;
-        Node *n = root;
-        while(true){
-            if(n!=NULL){
-                st.push(n);
-                n=n->left;
+        Node* curr = root;
+        while(curr){
+            if(curr->left == NULL){
+                ans.push_back(curr->data);
+                curr=curr->right;
             } else {
-                if(st.empty()) break;
-                n = st.top();
-                st.pop();
-                ans.push_back(n->data);
-                n=n->right;
+                Node* temp = curr->left;
+                while(temp->right && temp->right != curr){
+                    temp=temp->right;
+                }
+                if(temp->right == NULL){
+                    temp->right = curr;
+                    curr=curr->left;
+                } else {
+                    temp->right == NULL;
+                    ans.push_back(curr->data);
+                    curr=curr->right;
+                }
             }
         }
+        // stack<Node*> st;
+        // Node *n = root;
+        // while(true){
+        //     if(n!=NULL){
+        //         st.push(n);
+        //         n=n->left;
+        //     } else {
+        //         if(st.empty()) break;
+        //         n = st.top();
+        //         st.pop();
+        //         ans.push_back(n->data);
+        //         n=n->right;
+        //     }
+        // }
         return ans;
     }
 };
