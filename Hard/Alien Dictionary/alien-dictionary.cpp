@@ -8,55 +8,52 @@ using namespace std;
 // User function Template for C++
 
 class Solution{
-    private:
-    string topoSort(int V, vector<int> adj[])
-	{
-		int indegree[V] = {0};
-		for (int i = 0; i < V; i++) {
-			for (auto it : adj[i]) {
-				indegree[it]++;
-			}
-		}
-
-		queue<int> q;
-		for (int i = 0; i < V; i++) {
-			if (indegree[i] == 0) {
-				q.push(i);
-			}
-		}
-		
-		string ans="";
-		if(q.empty()) return ans;
-		
-		while (!q.empty()) {
-			int node = q.front();
-			q.pop();
-			ans.push_back(char(node + 'a'));
-			for (auto it : adj[node]) {
-				indegree[it]--;
-				if (indegree[it] == 0) q.push(it);
-			}
-		}
-
-		return ans;
-	}
     public:
+    // create graph when the first letter differs between two consecutive words and 
+    // then write the topo sort to get the string
+    vector<int> topoSort(vector<int> adj[], int K){
+        vector<int> indegree(K, 0);
+        for(int i=0;i<K;i++){
+            for(auto edge: adj[i]){
+                indegree[edge]++;
+            }
+        }
+        queue<int> q;
+        for(int i=0;i<K;i++){
+            if(indegree[i]==0) q.push(i);
+        }
+        
+        vector<int> ans;
+        while(!q.empty()){
+            auto t = q.front();
+            q.pop();
+            ans.push_back(t);
+            
+            for(auto it: adj[t]){
+                if(--indegree[it]==0) q.push(it);
+            }
+        }
+        return ans;
+        
+    }
     string findOrder(string dict[], int N, int K) {
         //code here
-        vector<int>adj[K];
-		for (int i = 0; i < N - 1; i++) {
-			string s = dict[i];
-			string t = dict[i + 1];
-			int len = min(s.size(), t.size());
-			for (int j = 0; j < len; j++) {
-				if (s[j] != t[j]) {
-					adj[s[j] - 'a'].push_back(t[j] - 'a');
-					break;
-				}
-			}
-		}
-		
-		return topoSort(K, adj);
+        vector<int> adj[K];
+        for(int i=0;i<N-1;i++){
+            string s = dict[i];
+            string t = dict[i+1];
+            int len = min(s.size(), t.size());
+            for(int idx=0;idx<len;idx++){
+                if(s[idx] != t[idx]){
+                    adj[s[idx]-'a'].push_back(t[idx]-'a');
+                    break;
+                }
+            }
+        }
+        vector<int> topo = topoSort(adj, K);
+        string ans = "";
+        for(auto ch: topo) ans+=char(ch+'a');
+        return ans;
     }
 };
 
